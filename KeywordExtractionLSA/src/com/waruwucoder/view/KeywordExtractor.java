@@ -309,8 +309,8 @@ public class KeywordExtractor extends javax.swing.JFrame {
     private void keywordExtractionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keywordExtractionButtonActionPerformed
         // TODO add your handling code here:
         runTextPreprocessing();
-        calculateTFIDF();
-        runSVD();
+        //calculateTFIDF();
+        //runSVD();
         //calculatetest();
     }//GEN-LAST:event_keywordExtractionButtonActionPerformed
 
@@ -354,7 +354,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
                 }
 
                 //Tokenizing the text
-                StringTokenizer st = new StringTokenizer(sCurrentLine, ":,.-// (){}?!");
+                StringTokenizer st = new StringTokenizer(sCurrentLine, ":,.-// (){}?!+@#$%^&*;><[]/=");
 
                 while (st.hasMoreTokens()) {
                     //pass value of token to kata after the token has trimmed and lower cased
@@ -407,7 +407,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
 
-            //this.keywordResultField.setText(resultTextPreprocessing2);
+            //this.keywordResultField.setText();
         }
     }
 
@@ -422,9 +422,8 @@ public class KeywordExtractor extends javax.swing.JFrame {
             for (String word : wordsResult) {
                 for (String sentence : sentences) {
                     i++;
-                    // System.out.println(word + " " + kec.tfIdf(sentence,sentences, word));
                     String content = "Doc " + i + " " + "=>" + " " + word + " " + kec.tfIdf(sentence, sentences, word);
-                    //resultTFIDF.(kec.tfIdf(sentence, sentences, word));
+                    content += '\n';
                     double a = kec.tfIdf(sentence, sentences, word);
                     double roundOff = Math.round(a * 100.0) / 100.0;
                     resultTFIDF.add(roundOff);
@@ -442,10 +441,11 @@ public class KeywordExtractor extends javax.swing.JFrame {
     private void runSVD() {
         int z = 0;
         double[][] docTermMatrix = new double[wordsResult.size()][numOfDoc];
+        
+        // -------------------------------------------- Term Document Matrix --------------------------------------------------------
         System.out.println("Term Document Matrix");
         System.out.println("---------------------");
         for (int i = 0; i < wordsResult.size(); i++) {
-            //System.out.println(wordsResult.get(i) + " ");
             for (int j = 0; j < numOfDoc; j++) {
                 docTermMatrix[i][j] = resultTFIDF.get(z);
                 System.out.print(docTermMatrix[i][j] + " ");
@@ -457,13 +457,16 @@ public class KeywordExtractor extends javax.swing.JFrame {
 
         System.out.println(docTermMatrix.length);
         System.out.println(docTermMatrix[0].length);
-        // SVD
+        
+        // -------------------------------------------- Singular Value Decomposition --------------------------------------------------------
+        // turn TDM to SVD
         DoubleMatrix[] doubleMatrix = Singular.fullSVD(new DoubleMatrix(docTermMatrix));
+        
+        // get 3 result svd matrices, they are U , sigma(diagonal form), and V
         DoubleMatrix U = doubleMatrix[0];
         DoubleMatrix sigma = doubleMatrix[1];
         DoubleMatrix V = doubleMatrix[2];
 
-        System.out.println("U rows = " + U.rows + " U columns : " + U.columns);
         System.out.println("Matrix U");
         for (int i = 0; i < U.rows; i++) {
             for (int j = 0; j < U.columns; j++) {
@@ -486,16 +489,6 @@ public class KeywordExtractor extends javax.swing.JFrame {
             System.out.println("");
         }
 
-        // reducing sigma to a size k
-//        List<Double> nonZero = new ArrayList<>();
-//        for (int i = 0; i < sigma.length; i++) {
-//            if (sigma.get(i) > 0.0) {
-//                System.out.print(sigma.get(i) + " ");
-//                nonZero.add(i, sigma.get(i));   
-//            } else {
-//                break;
-//            }
-//        }
         // determine mean value of sigma
         double hasil = 0;
         for (int i = 0; i < sigma.length; i++) {
@@ -512,42 +505,37 @@ public class KeywordExtractor extends javax.swing.JFrame {
             }
         }
 
+        // get value of k
         int k = temp.size();
-
+        
+        // -------------------------------------------- Dimensionality Reduction --------------------------------------------------------
+        // reduce sigma matrix by k size
         DoubleMatrix reducedSigma = new DoubleMatrix(temp.size());
-
         for (int i = 0; i < k; i++) {
             reducedSigma.put(i, 0, temp.get(i));
         }
 
-        System.out.println(reducedSigma.columns + " " + reducedSigma.rows);
         System.out.println("Matrix Reduced Sigma");
         for (int i = 0; i < reducedSigma.length; i++) {
             System.out.print(reducedSigma.get(i) + " ");
         }
         System.out.println("");
 
+        // reduce matrix U by size k
         DoubleMatrix reducedU = U.getRange(0, U.rows, 0, k);
+        
+        // reduce matrix V by size k
         DoubleMatrix reducedV = V.getRange(0, k, 0, V.columns);
 
-//        int k = nonZero.size();
-//        DoubleMatrix reducedSigma = new DoubleMatrix(nonZero.size());
-//        for (int i = 0; i < k; i++) {
-//            reducedSigma.put(i, 0, nonZero.get(i));
-//        }
-//        DoubleMatrix reducedU = U.getRange(0,U.rows,0,k);
-//        DoubleMatrix reducedV = V.getRange(0,k,0,V.columns);
-//        
-        System.out.println(U.columns);
-        System.out.println("\nreduced U");
+        System.out.println("Matrix Reduced U");
         for (int i = 0; i < U.rows; i++) {
             for (int j = 0; j < k; j++) {
                 System.out.print(reducedU.get(i, j) + " ");
             }
             System.out.println("");
         }
-//        
-        System.out.println("reduced V");
+        
+        System.out.println("Matrix Reduced V");
         for (int i = 0; i < k; i++) {
             for (int j = 0; j < V.columns; j++) {
                 System.out.print(reducedV.get(i, j) + " ");
@@ -555,20 +543,11 @@ public class KeywordExtractor extends javax.swing.JFrame {
             System.out.println("");
         }
 
-//        DoubleMatrix tempMatrix;
-//        DoubleMatrix resultMatrix;
-//        tempMatrix = reducedU.mmul(reducedSigma);
-//        resultMatrix = reducedV.mmul(tempMatrix);
-//        
-//        System.out.println("result Matrix");
-//        for(int i=0;i<resultMatrix.rows;i++){
-//            for(int j=0;j < resultMatrix.columns;j++){
-//                System.out.print(resultMatrix.get(i,j) + " ");
-//            }
-//            System.out.println("");
-//        }
+        // because reducedsigma matrix is diagonal formed (n*1 matrix) 
+        // we want to transform it to be kxk form
         DoubleMatrix sigmaNewMatrix = new DoubleMatrix(k, k);
-        //insert reducedSigma to kxk matrix
+        
+        // insert reducedSigma to kxk matrix
         int it = 0;
         for (int i = 0; i < k; i++) {
             for (int j = 0; j < k; j++) {
@@ -580,7 +559,9 @@ public class KeywordExtractor extends javax.swing.JFrame {
                 }
             }
         }
-//        
+
+        // this is the new sigma matrix, its size is k*k with non-zero values in its diagonal
+        // the other values are zero
         System.out.println("Sigma New Matrix");
         for (int i = 0; i < sigmaNewMatrix.rows; i++) {
             for (int j = 0; j < sigmaNewMatrix.columns; j++) {
@@ -589,37 +570,35 @@ public class KeywordExtractor extends javax.swing.JFrame {
             System.out.println("");
         }
 
-        System.out.println("Sigma New Matrix row: " + sigmaNewMatrix.rows);
-        System.out.println("Sigma New Matrix columns: " + sigmaNewMatrix.columns);
-        System.out.println("ReducedU Matrix columns: " + reducedU.rows);
-        System.out.println("ReducedU Matrix columns: " + reducedU.columns);
-        System.out.println("ReducedV Matrix columns: " + reducedV.rows);
-        System.out.println("ReducedV Matrix columns: " + reducedV.columns);
-        DoubleMatrix tempMatrix = new DoubleMatrix();
-        tempMatrix = reducedU.mmul(sigmaNewMatrix).mmul(reducedV);
+        // we multiply U,sigma,V matrices to be a new matrix result
+        DoubleMatrix resultMatrix = new DoubleMatrix();
+        resultMatrix = reducedU.mmul(sigmaNewMatrix).mmul(reducedV);
 
-//        
-        System.out.println("result Matrix");
-        for (int i = 0; i < tempMatrix.rows; i++) {
-            for (int j = 0; j < tempMatrix.columns; j++) {
-                System.out.print(tempMatrix.get(i, j) + " ");
+        System.out.println("Result Matrix");
+        for (int i = 0; i < resultMatrix.rows; i++) {
+            for (int j = 0; j < resultMatrix.columns; j++) {
+                System.out.print(resultMatrix.get(i, j) + " ");
             }
             System.out.println("");
         }
 
+        // -------------------------------------------- Spearman's Rank Correlation --------------------------------------------------------
         SpearmansCorrelation s = new SpearmansCorrelation();
 
+        // so we want to get values per row and transform it to be matrix ( 1 process consist of 2 matrices )
+        // these matrices will be calculated to get their correlation value
         Map<String, Double> kv = new HashMap<>();
 
-        double[] tempMatrixA = new double[tempMatrix.columns];
-        double[] tempMatrixB = new double[tempMatrix.columns];
+        double[] tempMatrixA = new double[resultMatrix.columns];
+        double[] tempMatrixB = new double[resultMatrix.columns];
 
+        System.out.println("Print out correlation between 2 terms");
         int v = 0;
-        for (int i = 0; i < tempMatrix.rows; i++) {
+        for (int i = 0; i < resultMatrix.rows; i++) {
             for (int l = i + 1; l < wordsResult.size(); l++) {
-                for (int j = 0; j < tempMatrix.columns; j++) {
-                    tempMatrixA[v] = tempMatrix.get(i, j);
-                    tempMatrixB[v] = tempMatrix.get(l, j);
+                for (int j = 0; j < resultMatrix.columns; j++) {
+                    tempMatrixA[v] = resultMatrix.get(i, j);
+                    tempMatrixB[v] = resultMatrix.get(l, j);
                     v++;
                 }
                 v = 0;
@@ -634,11 +613,13 @@ public class KeywordExtractor extends javax.swing.JFrame {
         }
 
         String resultPage = "";
-        //ArrayList<String> res = new ArrayList<>();
 
+        // -------------------------------------------- Page Rank --------------------------------------------------------
+        
+        // get terms that similar with key
+        // example : tindakan -> plagiarisme, penulis
         for (Iterator<String> ita = keySpearman.iterator(); ita.hasNext();) {
             String ts = ita.next();
-            //System.out.println(ts);
             for (Map.Entry<String, Double> entry : kv.entrySet()) {
 
                 String str = entry.getKey().toString();
@@ -652,13 +633,12 @@ public class KeywordExtractor extends javax.swing.JFrame {
                     resultPage += ',';
                 }
             }
-            //res.add(resultPage);
             res.put(ts, resultPage);
             resultPage = "";
         }
 
+        // calculate page rank value of key
         for (Map.Entry<String, String> loop : res.entrySet()) {
-            //System.out.println("Key : " + loop.getKey() + " " + "Value : " + loop.getValue());
 
             double valueofpagerank = 0;
             String val = loop.getValue().toString();
@@ -666,20 +646,18 @@ public class KeywordExtractor extends javax.swing.JFrame {
 
             for (int i = 0; i < values.length; i++) {
                 valueofpagerank += countPageRank(values[i], countValueOfPage(values[i]));
-                //System.out.print(countValueOfPage(values[i])+ " ");
-                //System.out.print(values[i]);
+              
             }
-            //System.out.println("");
             resultPageRank.put(loop.getKey(), valueofpagerank);
-            //System.out.println("Key : " + loop.getKey() + " " + "Value : " + valueofpagerank);
+            
         }
 
-        // countValueOfPage("tindakan");
+        // sorting from the highest value to lowest
         resultPageRank = sortByValue(resultPageRank);
+        
         int jumlah = 0;
         for (Map.Entry<String, Double> loop : resultPageRank.entrySet()) {
             if (jumlah < 10) {
-                System.out.println("Key : " + loop.getKey() + " " + "Value : " + loop.getValue());
                 resultKeywordExtraction += "Key : " + loop.getKey() + " " + "Value : " + loop.getValue();
                 resultKeywordExtraction += '\n';
                 jumlah++;
