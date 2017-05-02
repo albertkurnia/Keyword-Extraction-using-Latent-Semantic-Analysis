@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 import org.jblas.DoubleMatrix;
-import org.jblas.Singular;         
+import org.jblas.Singular;
 
 /**
  *
@@ -47,13 +47,14 @@ public class KeywordExtractor extends javax.swing.JFrame {
     /**
      * Creates new form KeywordExtractor
      */
-    
     final JFileChooser fc = new JFileChooser();
     File file;
 
     private static final String FILENAME = "E:\\File TA\\result.txt";
     private static final String FILENAME2 = "E:\\File TA\\sentences.txt";
     private static final String FILENAME3 = "E:\\File TA\\wordresult.txt";
+    private static final String FILENAME4 = "E:\\File TA\\perco.txt";
+    private static final String FILENAME5 = "E:\\File TA\\hasilcasefolding.txt";
 
     //I/O File
     BufferedReader br = null;
@@ -66,7 +67,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
     int numofkey = 0;
     String resultKeywordExtraction = "";
 
-    // wordList is set of words from document
+    // wordList is set of words  from document
     ArrayList<String> wordList = new ArrayList<String>();
 
     //stopwordset is set of stopword bahasa indonesia
@@ -119,6 +120,9 @@ public class KeywordExtractor extends javax.swing.JFrame {
         resetButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         keywordResultField = new javax.swing.JTextArea();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -155,9 +159,9 @@ public class KeywordExtractor extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(logo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                .addGap(86, 86, 86)
                 .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,6 +207,40 @@ public class KeywordExtractor extends javax.swing.JFrame {
         keywordResultField.setRows(5);
         jScrollPane2.setViewportView(keywordResultField);
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(new javax.swing.border.MatteBorder(null));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
+
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("App Copyright : D4 TI-08 '13 Institut Teknologi Del ");
+
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Jblas Library : Copyright (c) 2009, Mikio L. Braun and contributors ");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(232, 232, 232))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(183, 183, 183))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addGap(16, 16, 16))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -215,10 +253,11 @@ public class KeywordExtractor extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(browseButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(keywordExtractionButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(resetButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(resetButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(keywordExtractionButton)
+                                .addComponent(browseButton)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
@@ -227,30 +266,33 @@ public class KeywordExtractor extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
                             .addComponent(jScrollPane2))
                         .addGap(39, 39, 39))))
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(9, 9, 9)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(4, 4, 4)
+                .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(browseButton)
                     .addComponent(pathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(keywordExtractionButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(resetButton))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(resetButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -261,9 +303,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -290,7 +330,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
                 String line = reader.readLine();
                 text += line;
                 while (line != null) {
-                    // (line);
+
                     line = reader.readLine();
                     text += line;
                     text += '\n';
@@ -308,15 +348,30 @@ public class KeywordExtractor extends javax.swing.JFrame {
 
     private void keywordExtractionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keywordExtractionButtonActionPerformed
         // TODO add your handling code here:
+        checkInputFrom();
         runTextPreprocessing();
-        //calculateTFIDF();
-        //runSVD();
-        //calculatetest();
+        calculateTFIDF();
+        runSVD();
     }//GEN-LAST:event_keywordExtractionButtonActionPerformed
+
+    private void checkInputFrom() {
+
+        if (this.insertTextField.getText() != null && this.pathField.getText().isEmpty()) {
+
+            String paragraph = this.insertTextField.getText();
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME4))) {
+                bw.write(paragraph);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            KeywordExtractorController.setFileName(FILENAME4);
+        }
+
+    }
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         // TODO add your handling code here:
-        
+        run();
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void runTextPreprocessing() {
@@ -345,20 +400,29 @@ public class KeywordExtractor extends javax.swing.JFrame {
             //read text from file line per line
             while ((sCurrentLine = br.readLine()) != null) {
 
+                System.out.println("\nCase Folding");
+                // Case Folding sentence
+                sCurrentLine = caseFolding(sCurrentLine);
+                
+                System.out.println(sCurrentLine);
+                
+                // Split paragraph to sentence
                 Pattern re = Pattern.compile("[^.!?\\s][^.!?]*(?:[.!?](?!['\"]?\\s|$)[^.!?]*)*[.!?]?['\"]?(?=\\s|$)", Pattern.MULTILINE | Pattern.COMMENTS);
                 Matcher reMatcher = re.matcher(sCurrentLine);
                 while (reMatcher.find()) {
                     String s = reMatcher.group().toString().toLowerCase();
                     sentences.add(s);
-                    //System.out.println(s);
                 }
-
+                
+                System.out.println("\nTokenization & Trim : ");
                 //Tokenizing the text
-                StringTokenizer st = new StringTokenizer(sCurrentLine, ":,.-// (){}?!+@#$%^&*;><[]/=");
-
+                StringTokenizer st = tokenize(sCurrentLine);
+                
                 while (st.hasMoreTokens()) {
                     //pass value of token to kata after the token has trimmed and lower cased
-                    kata = st.nextToken().trim().replace("[^a-zA-Z]", "").toLowerCase();
+                    kata = st.nextToken().trim().replace("[^a-zA-Z]", "");
+                    System.out.println(kata);
+                    
                     if (isNumeric(kata)) {
                         continue;
                     } else {
@@ -370,6 +434,14 @@ public class KeywordExtractor extends javax.swing.JFrame {
                     }
                 }
             }
+
+            System.out.println("---------------------------------");
+            System.out.println("Case Folding Done");
+            System.out.println("---------------------------------");
+            System.out.println("Tokenization Done");
+            System.out.println("---------------------------------");
+            System.out.println("Trim Done");
+            System.out.println("---------------------------------");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -388,16 +460,6 @@ public class KeywordExtractor extends javax.swing.JFrame {
             // remove duplicate word in arraylist
             wordsResult = new ArrayList<String>(new LinkedHashSet<String>(wordsResult));
 
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME2))) {
-                for (String sentence : sentences) {
-                    String content = sentence + " " + '\n';
-                    bw.write(content);
-                    //System.out.println(sentence);
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME3))) {
                 for (String word : wordsResult) {
                     String content = word + " " + '\n';
@@ -407,12 +469,23 @@ public class KeywordExtractor extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
 
-            //this.keywordResultField.setText();
         }
+
+        System.out.println("Text Preprocessing Done. Please check " + FILENAME3);
+    }
+
+    public String caseFolding(String s) {
+        return s.toLowerCase();
+    }
+
+    public StringTokenizer tokenize(String s) {
+        // tokenize the string per special character
+        StringTokenizer st = new StringTokenizer(s, ":,.-// (){}?!+@#$%^&*;><[]/=");
+        return st;
     }
 
     public boolean isNumeric(String s) {
-        return s.matches("[-+]?\\d*\\.?\\d+");
+        return s.matches("[-+]?\\d*\\ .?\\d+");
     }
 
     private void calculateTFIDF() {
@@ -423,6 +496,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
                 for (String sentence : sentences) {
                     i++;
                     String content = "Doc " + i + " " + "=>" + " " + word + " " + kec.tfIdf(sentence, sentences, word);
+
                     content += '\n';
                     double a = kec.tfIdf(sentence, sentences, word);
                     double roundOff = Math.round(a * 100.0) / 100.0;
@@ -435,16 +509,20 @@ public class KeywordExtractor extends javax.swing.JFrame {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
+        System.out.println("---------------------------------");
+        System.out.println("TF-IDF Calculation Done. Please Check " + FILENAME);
+        System.out.println("---------------------------------\n\n\n\n");
     }
 
     private void runSVD() {
         int z = 0;
         double[][] docTermMatrix = new double[wordsResult.size()][numOfDoc];
-        
+
         // -------------------------------------------- Term Document Matrix --------------------------------------------------------
         System.out.println("Term Document Matrix");
         System.out.println("---------------------");
+        System.out.println("Number of word : "+wordsResult.size());
+        System.out.println("Number of Document : " + numOfDoc);
         for (int i = 0; i < wordsResult.size(); i++) {
             for (int j = 0; j < numOfDoc; j++) {
                 docTermMatrix[i][j] = resultTFIDF.get(z);
@@ -455,19 +533,16 @@ public class KeywordExtractor extends javax.swing.JFrame {
             System.out.print('\n');
         }
 
-        System.out.println(docTermMatrix.length);
-        System.out.println(docTermMatrix[0].length);
-        
         // -------------------------------------------- Singular Value Decomposition --------------------------------------------------------
         // turn TDM to SVD
         DoubleMatrix[] doubleMatrix = Singular.fullSVD(new DoubleMatrix(docTermMatrix));
-        
+
         // get 3 result svd matrices, they are U , sigma(diagonal form), and V
         DoubleMatrix U = doubleMatrix[0];
         DoubleMatrix sigma = doubleMatrix[1];
         DoubleMatrix V = doubleMatrix[2];
 
-        System.out.println("Matrix U");
+        System.out.println("\nMatrix U");
         for (int i = 0; i < U.rows; i++) {
             for (int j = 0; j < U.columns; j++) {
                 System.out.print(U.get(i, j) + " ");
@@ -475,13 +550,13 @@ public class KeywordExtractor extends javax.swing.JFrame {
             System.out.println("");
         }
 
-        System.out.println("Matrix Sigma");
+        System.out.println("\nMatrix Sigma");
         for (int i = 0; i < sigma.length; i++) {
             System.out.print(sigma.get(i) + " ");
         }
         System.out.println("");
 
-        System.out.println("Matrix V");
+        System.out.println("\nMatrix V");
         for (int i = 0; i < V.rows; i++) {
             for (int j = 0; j < V.columns; j++) {
                 System.out.print(V.get(i, j) + " ");
@@ -507,7 +582,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
 
         // get value of k
         int k = temp.size();
-        
+
         // -------------------------------------------- Dimensionality Reduction --------------------------------------------------------
         // reduce sigma matrix by k size
         DoubleMatrix reducedSigma = new DoubleMatrix(temp.size());
@@ -523,7 +598,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
 
         // reduce matrix U by size k
         DoubleMatrix reducedU = U.getRange(0, U.rows, 0, k);
-        
+
         // reduce matrix V by size k
         DoubleMatrix reducedV = V.getRange(0, k, 0, V.columns);
 
@@ -534,7 +609,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
             }
             System.out.println("");
         }
-        
+
         System.out.println("Matrix Reduced V");
         for (int i = 0; i < k; i++) {
             for (int j = 0; j < V.columns; j++) {
@@ -546,7 +621,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
         // because reducedsigma matrix is diagonal formed (n*1 matrix) 
         // we want to transform it to be kxk form
         DoubleMatrix sigmaNewMatrix = new DoubleMatrix(k, k);
-        
+
         // insert reducedSigma to kxk matrix
         int it = 0;
         for (int i = 0; i < k; i++) {
@@ -615,7 +690,6 @@ public class KeywordExtractor extends javax.swing.JFrame {
         String resultPage = "";
 
         // -------------------------------------------- Page Rank --------------------------------------------------------
-        
         // get terms that similar with key
         // example : tindakan -> plagiarisme, penulis
         for (Iterator<String> ita = keySpearman.iterator(); ita.hasNext();) {
@@ -646,15 +720,15 @@ public class KeywordExtractor extends javax.swing.JFrame {
 
             for (int i = 0; i < values.length; i++) {
                 valueofpagerank += countPageRank(values[i], countValueOfPage(values[i]));
-              
+
             }
             resultPageRank.put(loop.getKey(), valueofpagerank);
-            
+
         }
 
         // sorting from the highest value to lowest
         resultPageRank = sortByValue(resultPageRank);
-        
+
         int jumlah = 0;
         for (Map.Entry<String, Double> loop : resultPageRank.entrySet()) {
             if (jumlah < 10) {
@@ -712,14 +786,6 @@ public class KeywordExtractor extends javax.swing.JFrame {
         return result;
     }
 
-    private void calculatetest() {
-        KeywordExtractorController kec = new KeywordExtractorController();
-        for (String sentence : sentences) {
-            System.out.println("TF : " + kec.tf(sentence, "algoritma"));
-            System.out.println("IDF : " + kec.idf(sentences, "algoritma"));
-        }
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -760,8 +826,11 @@ public class KeywordExtractor extends javax.swing.JFrame {
     private javax.swing.JTextArea insertTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton keywordExtractionButton;
