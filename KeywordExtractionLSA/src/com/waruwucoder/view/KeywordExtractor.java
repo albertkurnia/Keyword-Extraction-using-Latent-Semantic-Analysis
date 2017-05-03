@@ -485,7 +485,7 @@ public class KeywordExtractor extends javax.swing.JFrame {
     }
 
     public boolean isNumeric(String s) {
-        return s.matches("[-+]?\\d*\\ .?\\d+");
+        return s.matches("[-+]?\\d*\\,?\\.?\\d+");
     }
 
     private void calculateTFIDF() {
